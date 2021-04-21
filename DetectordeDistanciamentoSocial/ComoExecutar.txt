@@ -1,0 +1,5 @@
+1- Abra o CMD no diretorio do projeto
+2- Instale as dependencias com o comando -> pip install -r dependencias.txt
+3- Link para download do yolov3.weights - https://pjreddie.com/darknet/yolo/
+4- Cole o arquivo yolov3.weights na pasta do projeto
+5- Execute o codigo : python DetectordeDistanciaSocial.py
