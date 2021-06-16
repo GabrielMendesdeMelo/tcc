@@ -28,7 +28,7 @@ class Application():
         self.telaRelatorio.resizable(False, False)
 
     def widgets(self):
-        #Criação do Botão de iniciar
+        #Criação do Botão de Finalizar
         self.btnFinalizar = Button(self.telaRelatorio, text="FINALIZAR")
         self.btnFinalizar.place(relx=0.77, rely=0.85, relwidth=0.20, relheight=0.10)
 

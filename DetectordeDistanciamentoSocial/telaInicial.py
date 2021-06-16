@@ -1,7 +1,5 @@
 from tkinter import *
 import mysql.connector
-
-
 import numpy as np
 import time
 import cv2
@@ -12,14 +10,15 @@ import imutils
 telaInicial = Tk()
 
 ###Conexão com o banco de dados
-con = mysql.connector.connect(host='localhost',database='projetotcc',user='root',password='12345678')
+con = mysql.connector.connect(host='localhost', database='projetotcc', user='root', password='12345678')
 
 if con.is_connected():
     db_info = con.get_server_info()
-    print("Conectado ao Banco de dados",db_info)
+    print("Conectado ao Banco de dados", db_info)
 
 ### Classe principal
 class Application():
+
     ##Inicialização da Tela
     def __init__(self):
         self.telaInicial = telaInicial
@@ -29,9 +28,9 @@ class Application():
 
     def telaConfig(self):
         #Configurações referente à tela inicial
-        self.telaInicial.title("Detector de Distanciamento Social")
+        self.telaInicial.title("Detector de Distanciamento Social - Tela Inicial")
         self.telaInicial.configure(background='#C0C0C0')
-        self.telaInicial.geometry("900x550")
+        self.telaInicial.geometry("700x450")
         self.telaInicial.resizable(False, False)
 
     def widgets(self):
@@ -40,19 +39,78 @@ class Application():
         self.btnIniciar.place(relx=0.77, rely=0.85, relwidth=0.20, relheight=0.10)
 
         #Criação do Texto Inicial
-        self.label_bemvindo = Label(self.telaInicial, text="Bem-Vindo!")
-        self.label_bemvindo.place(relx=0.47, rely=0.05)
+        self.label_bemvindo = Label(self.telaInicial, text="Bem-Vindo!", font="Arial 30 bold")
+        self.label_bemvindo.place(relx=0.33, rely=0.05)
+
 
         #Criação do Texto e Entrada da quantidade máxima de pessoas
-        self.label_qtdPessoas = Label(self.telaInicial, text="Digite o máximo de pessoas permitidas no ambiente:")
-        self.label_qtdPessoas.place(relx=0.35, rely=0.2)
+        self.label_qtdPessoas = Label(self.telaInicial, text="Digite o máximo de pessoas permitidas no ambiente:", font="Arial 15")
+        self.label_qtdPessoas.place(relx=0.16, rely=0.40)
         #Entrada de dados
         self.entry_qtdPessoas = Entry(self.telaInicial)
-        self.entry_qtdPessoas.place(relx=0.44, rely=0.25, relheight=0.04)
+        self.entry_qtdPessoas.place(relx=0.40, rely=0.47, relheight=0.05)
+
+
+    def carregaTelaRelatorio(self):
+
+        self.telaRelatorio = Toplevel()
+
+        self.telaRelatorio.title("Detector de Distanciamento Social - Relatório de Execução")
+        self.telaRelatorio.configure(background='#C0C0C0')
+        self.telaRelatorio.geometry("900x550")
+        self.telaRelatorio.resizable(False, False)
+        self.telaRelatorio.transient(self.telaInicial)
+        self.telaRelatorio.focus_force()
+        self.telaRelatorio.grab_set()
+
+
+        # Entrys da tela de Relatório
+        self.entry_qtdLimitePessoas = Entry(self.telaRelatorio)
+        self.entry_qtdLimitePessoas.place(relx=0.77, rely=0.23, relheight=0.04, relwidth=0.20)
+
+        self.entry_qtdPessoasDesrespeitado = Entry(self.telaRelatorio)
+        self.entry_qtdPessoasDesrespeitado.place(relx=0.77, rely=0.33, relheight=0.04, relwidth=0.20)
+
+        self.entry_qtdVezesDesrespeitado = Entry(self.telaRelatorio)
+        self.entry_qtdVezesDesrespeitado.place(relx=0.77, rely=0.43, relheight=0.04, relwidth=0.20)
+
+        self.entry_totalPessoas = Entry(self.telaRelatorio)
+        self.entry_totalPessoas.place(relx=0.77, rely=0.53, relheight=0.04, relwidth=0.20)
+
+        self.entry_dataHora = Entry(self.telaRelatorio)
+        self.entry_dataHora.place(relx=0.77, rely=0.63, relheight=0.04, relwidth=0.20)
+
+
+        # Labels da tela de Relatório
+        self.label_relatorio = Label(self.telaRelatorio, text="Relatório", font="Arial 30 bold")
+        self.label_relatorio.place(relx=0.40, rely=0.02)
+
+        self.label_limitePessoas = Label(self.telaRelatorio, text="Limite de pessoas permitidas no local:", font="Arial 15")
+        self.label_limitePessoas.place(relx=0.03, rely=0.23)
+
+        self.label_qtdPessoasDesrespeitado = Label(self.telaRelatorio, text="Quantidade de pessoas que não respeitaram o distanciamento social:", font="Arial 15")
+        self.label_qtdPessoasDesrespeitado.place(relx=0.03, rely=0.33)
+
+        self.label_qtdVezesDesrespeitado = Label(self.telaRelatorio, text="Quantidade de vezes em que o distanciamento docial não foi respeitado:", font="Arial 15")
+        self.label_qtdVezesDesrespeitado.place(relx=0.03, rely=0.43)
+
+        self.label_totalPessoas = Label(self.telaRelatorio, text="Total de Pessoas que passaram pelo local:", font="Arial 15")
+        self.label_totalPessoas.place(relx=0.03, rely=0.53)
+
+        self.label_dataHora = Label(self.telaRelatorio, text="Data e Hora de execução:", font="Arial 15")
+        self.label_dataHora.place(relx=0.03, rely=0.63)
+
+        # Criação do Botão Finalizar
+        self.btnFinalizar = Button(self.telaRelatorio, text="FINALIZAR", command=self.telaInicial.destroy)
+        self.btnFinalizar.place(relx=0.77, rely=0.85, relwidth=0.20, relheight=0.10)
+
+        # Criação do Botão Voltar a Tela Inicial
+        self.btnFinalizar = Button(self.telaRelatorio, text="Voltar a Tela Inicial", command=self.telaRelatorio.destroy)
+        self.btnFinalizar.place(relx=0.03, rely=0.85, relwidth=0.20, relheight=0.10)
 
     def carregaDetectorDistanciaSocial(self):
 
-        self.telaInicial.destroy()
+        # self.telaInicial.destroy()
 
         labelsPath = "./coco.names"
         CONTORNO = open(labelsPath).read().strip().split("\n")
@@ -195,7 +253,6 @@ class Application():
         cap.release()
         cv2.destroyAllWindows()
 
-
-
+        self.carregaTelaRelatorio()
 
 Application()
